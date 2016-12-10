@@ -32,16 +32,16 @@ public class ErrorWindow : ShowUIProgramDataBaseWindow<ErrorWindow.ErrorWindowDa
             EditorGUILayout.ObjectField(curObj, curObj.GetType(), true, fieldWidthOption);
 
             //Variables
-            foreach (UIExportData data in curObj.ExportData)
+            foreach (UIExportData uiData in curObj.ExportData)
             {
                 string className = string.IsNullOrEmpty(curObj.LocalClassName) ? this.data.clsName : curObj.LocalClassName;
-                string type = data.CompReference == null ? "GameObject" : data.CompReference.GetType().Name;
+                string type = uiData.CompReference == null ? "GameObject" : uiData.CompReference.GetType().Name;
 
                 DrawSplitChar();
                 GUILayout.Label(type, fieldWidthOption);
 
                 DrawSplitChar();
-                GUILayout.Label(className + "." + data.VariableName, fieldWidthOption);
+                GUILayout.Label(className + "." + uiData.VariableName, fieldWidthOption);
             }
             EditorGUILayout.EndHorizontal();
         }
