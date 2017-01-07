@@ -2,21 +2,15 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-[InitializeOnLoad]
 public class ComponentHierarchyIcon<T>
     where T : Component
 {
+    public static ComponentHierarchyIcon<T> curUse = null;
     private Texture2D feiIcon;
     private Dictionary<int, T> allComponentDic;
 
-    /// <summary>
-    /// 启用
-    /// </summary>
     public ComponentHierarchyIcon()
     {
-        if (ConfigData.curUse != null)
-            ConfigData.curUse.Close();
-
         feiIcon = AssetDatabase.LoadAssetAtPath(AutoExportScriptData.FilePathManager.Instance.starIconFilePath, typeof(Texture2D)) as Texture2D;
         if (feiIcon == null)
             return;
@@ -26,9 +20,25 @@ public class ComponentHierarchyIcon<T>
     }
 
     /// <summary>
+    /// 启用
+    /// </summary>
+    public static void Open()
+    {
+        Close();
+
+        curUse = new ComponentHierarchyIcon<T>();
+    }
+
+    /// <summary>
     /// 关闭
     /// </summary>
-    public void Close()
+    public static void Close()
+    {
+        if (curUse != null)
+            curUse.Stop();
+    }
+
+    public void Stop()
     {
         feiIcon = null;
         if (allComponentDic != null)
@@ -41,11 +51,11 @@ public class ComponentHierarchyIcon<T>
     /// <summary>
     /// 静态构造函数，初始化作用
     /// </summary>
-    static ComponentHierarchyIcon()
+    public static void Init()
     {
-        if (ConfigData.IsShowUIProgramDataHierarchyIcon)
+        if (ToolsConfigManager.Instance.IsShowUIProgramDataHierarchyIcon)
         {
-            ConfigData.curUse = new ComponentHierarchyIcon<AutoExportScriptData.UIProgramData>();
+            Open();
         }
     }
 

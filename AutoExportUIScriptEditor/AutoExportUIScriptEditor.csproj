@@ -56,9 +56,11 @@
     <Compile Include="Core\FileBuilder\TemplateClassBuilder\VariableInfo.cs" />
     <Compile Include="Core\FileBuilder\TemplateClassBuilder\VelocityEngineHandle.cs" />
     <Compile Include="Core\IniFile.cs" />
-    <Compile Include="Editor\ConfigWindow\ConfigData.cs" />
+    <Compile Include="Core\ProgramMain.cs" />
+    <Compile Include="Editor\ConfigWindow\ToolsConfigManager.cs" />
     <Compile Include="Editor\ConfigWindow\DataConfigWindow.cs" />
     <Compile Include="Editor\ConfigWindow\HotKey.cs" />
+    <Compile Include="Editor\ConfigWindow\ToolsConfigData.cs" />
     <Compile Include="Editor\OutLineWindow\ErrorWindow.cs" />
     <Compile Include="Editor\OutLineWindow\ShowUIProgramDataBaseWindow.cs" />
     <Compile Include="Editor\UnityClassEditor\DecoratorEditor.cs" />
@@ -87,25 +89,36 @@
     <Content Include="UIScriptCompileLibrary\UnityEngine.dll" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Config\Config.ini" />
+    <None Include="Config\UIExportScriptsConfig.ini" />
     <None Include="Editor\TemplateFile\UIScriptTemplate.velocity" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if not exist $(SolutionDir)UIScriptCompileLibrary md $(SolutionDir)UIScriptCompileLibrary
+
 if not exist $(SolutionDir)Assets\Editor md $(SolutionDir)Assets\Editor
-if not exist $(SolutionDir)Assets\Editor\UIScriptBuilder md $(SolutionDir)Assets\Editor\UIScriptBuilder 
+
+if not exist $(SolutionDir)Assets\Editor\UIScriptBuilder md $(SolutionDir)Assets\Editor\UIScriptBuilder
+
 if not exist $(SolutionDir)Assets\Editor\UIScriptBuilder\TemplateFile md $(SolutionDir)Assets\Editor\UIScriptBuilder\TemplateFile
+
 if not exist $(SolutionDir)Assets\Editor\UIScriptBuilder\Icon md $(SolutionDir)Assets\Editor\UIScriptBuilder\Icon
 
 
+
+
 copy $(TargetPath) $(SolutionDir)Assets\Editor\UIScriptBuilder\
-copy $(TargetDir)\NVelocity.dll $(SolutionDir)Assets\Editor\UIScriptBuilder\NVelocity.dll
+
+copy $(TargetDir)NVelocity.dll $(SolutionDir)Assets\Editor\UIScriptBuilder\NVelocity.dll
+
 copy $(ProjectDir)Icon\ $(SolutionDir)Assets\Editor\UIScriptBuilder\Icon\
+
 copy $(ProjectDir)UIScriptCompileLibrary\ $(SolutionDir)UIScriptCompileLibrary\
+
 copy $(ProjectDir)Editor\TemplateFile\UIScriptTemplate.velocity $(SolutionDir)Assets\Editor\UIScriptBuilder\TemplateFile\UIScriptTemplate.velocity
-copy $(ProjectDir)Config\Config.ini $(SolutionDir)Assets\Editor\UIScriptBuilder\Config.ini</PostBuildEvent>
+
+copy $(ProjectDir)Config\UIExportScriptsConfig.ini $(SolutionDir)Assets\Editor\UIScriptBuilder\UIExportScriptsConfig.ini</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

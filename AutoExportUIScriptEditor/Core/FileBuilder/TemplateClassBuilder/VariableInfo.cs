@@ -8,36 +8,44 @@
         public string variableName { get; set; }
         public bool isGameObjectReference { get; set; }
         public string fullType { get; set; }
+        public bool isCompArray { get; set; }
 
         public static VariableInfo GetVariableInfoFromUIExportData(UIExportData data)
         {
             VariableInfo info = new VariableInfo();
-            info.type = GetVariableType(data);
-            info.constStrVaiableName = "_" + data.VariableName + "_Name";
-            info.privateVariableName = "_" + data.VariableName;
+
+            info.isCompArray = data.isArrayData;
+            info.isGameObjectReference = data.getGameObject;
+
             info.variableName = data.VariableName;
-            info.isGameObjectReference = data.CompReference == null;
-            if (!info.isGameObjectReference)
-                info.fullType = data.CompReference.GetType().FullName.Replace("UnityEngine.", "");
+            info.privateVariableName = "_" + data.VariableName;
+            info.constStrVaiableName = "_" + data.VariableName + "_Name";
 
-            return info;
-        }
+            string arrayType = "[]";
+            System.Type compType = null;
 
-        /// <summary>
-        /// 获取变量的简称类型
-        /// </summary>
-        private static string GetVariableType(UIExportData data)
-        {
-            string type = "";
-            if (data.CompReference == null)
+            if (data.isArrayData)
             {
-                type = "GameObject";
+                compType = data.CompReferenceArray[0].GetType();
+                arrayType = "[]";
             }
             else
             {
-                type = data.CompReference.GetType().Name;
+                compType = data.CompReference.GetType();
+                arrayType = "";
             }
-            return type;
+
+            if (data.getGameObject)
+            {
+                info.fullType = "GameObject";
+            }
+            else
+            {
+                info.fullType = compType.FullName.Replace("UnityEngine.", "");
+            }
+            info.type = info.fullType + arrayType;
+
+            return info;
         }
     }
 }

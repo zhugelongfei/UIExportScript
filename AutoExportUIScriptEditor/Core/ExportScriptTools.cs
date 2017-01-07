@@ -121,17 +121,7 @@ namespace AutoExportScriptData
         /// </summary>
         private void AddContainerToVariablesList(string key, UIProgramData pData, UIProgramData[] ProgramDatas, Dictionary<string, List<UIExportData>> dic_ClassAndVariables)
         {
-            for (int i = 0; i < pData.ExportData.Length; i++)
-            {
-                UIExportData data = pData.ExportData[i];
-                if (data == null) continue;
-
-                if (string.IsNullOrEmpty(data.VariableName) || data.VariableName.IndexOf(' ') != -1)
-                {
-                    throw new UIExportDataException(string.Format("Variable name error.It is null or has blank space and variable name is {0} !",
-                        data.VariableName), pData);
-                }
-            }
+            CheckData(pData);
 
             if (dic_ClassAndVariables.ContainsKey(key))
             {
@@ -154,7 +144,7 @@ namespace AutoExportScriptData
                                 }
                             }
                         }
-                        throwLine:
+                    throwLine:
                         throw new UIExportDataException(string.Format("The variables has same and variable name is {0} !",
                             data.VariableName), pData, hasObj);
                     }
@@ -167,5 +157,54 @@ namespace AutoExportScriptData
             }
         }
 
+        private void CheckData(UIProgramData pData)
+        {
+            for (int i = 0; i < pData.ExportData.Length; i++)
+            {
+                UIExportData data = pData.ExportData[i];
+                if (data == null) continue;
+
+                //检测数据
+                if (data.isArrayData)
+                {
+                    bool isErrorData = false;
+                    if (data.CompReferenceArray == null)
+                    {
+                        isErrorData = true;
+                    }
+                    else
+                    {
+                        foreach (var item in data.CompReferenceArray)
+                        {
+                            if (item == null)
+                            {
+                                isErrorData = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (isErrorData)
+                    {
+                        throw new UIExportDataException(string.Format("Variable data error.It is array data,but array is null or element is null. Variable name is {0} !",
+                            data.VariableName), pData);
+                    }
+                }
+                else
+                {
+                    if (data.CompReference == null)
+                    {
+                        throw new UIExportDataException(string.Format("Variable data error.It is null. Variable name is {0} !",
+                            data.VariableName), pData);
+                    }
+                }
+
+                //检测名字
+                if (string.IsNullOrEmpty(data.VariableName) || data.VariableName.IndexOf(' ') != -1)
+                {
+                    throw new UIExportDataException(string.Format("Variable name error.It is null or has blank space and variable name is {0} !",
+                        data.VariableName), pData);
+                }
+            }
+        }
     }
 }

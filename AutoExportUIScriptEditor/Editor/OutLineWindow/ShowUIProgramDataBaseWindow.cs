@@ -92,6 +92,46 @@ public class ShowUIProgramDataBaseWindow<D> : EditorWindow
         return false;
     }
 
+    protected void DrawUIProgramData(UIProgramData pData)
+    {
+        EditorGUILayout.BeginHorizontal();
+        //Target game object
+        EditorGUILayout.ObjectField(pData, pData.GetType(), true, fieldWidthOption);
+        //Variables
+        foreach (UIExportData data in pData.ExportData)
+        {
+            string type = "Null";
+
+            if (data.getGameObject)
+            {
+                if (data.isArrayData)
+                    type = "GameObject[]";
+                else
+                    type = "GameObject";
+            }
+            else
+            {
+                if (data.isArrayData)
+                {
+                    if (data.CompReferenceArray == null || data.CompReferenceArray.Length == 0 || data.CompReferenceArray[0] == null)
+                        type = "ArrayTypeError";
+                    else
+                        type = data.CompReferenceArray[0].GetType().Name + "[]";
+                }
+                else
+                {
+                    type = data.CompReference.GetType().Name;
+                }
+            }
+
+            DrawSplitChar();
+            GUILayout.Label(type, fieldWidthOption);
+
+            DrawSplitChar();
+            GUILayout.Label(data.VariableName, fieldWidthOption);
+        }
+        EditorGUILayout.EndHorizontal();
+    }
 
     protected void DrawSplitChar()
     {

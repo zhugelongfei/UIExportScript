@@ -39,19 +39,24 @@ namespace AutoExportScriptData
         //标记图标路径
         public string starIconFilePath = null;
 
-        private const string Section = "Config";
-        private string iniPath = UnityEngine.Application.dataPath + @"\Editor\UIScriptBuilder\Config.ini";
+        private const string Section = "FilePathConfig";
+        private string iniPath = UnityEngine.Application.dataPath + @"\Editor\UIScriptBuilder\UIExportScriptsConfig.ini";
+
+        public IniFile GetIniConfig()
+        {
+            return new IniFile(iniPath);
+        }
 
         public void Write()
         {
             File.Delete(iniPath);
-            IniFile ini = new IniFile(iniPath);
+            IniFile ini = GetIniConfig();
             ini.WriteObject(Section, this);
         }
 
         public void ReadData()
         {
-            IniFile ini = new IniFile(iniPath);
+            IniFile ini = GetIniConfig();
             ini.ReadObject(Section, this);
         }
 

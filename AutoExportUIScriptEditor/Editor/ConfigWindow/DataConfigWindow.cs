@@ -37,7 +37,7 @@ public class DataConfigWindow :EditorWindow
                 }
             }
         }
-        ConfigData.IsShowUIProgramDataHierarchyIcon =  GUILayout.Toggle(ConfigData.IsShowUIProgramDataHierarchyIcon, "是否显示UIProgramData的Icon");
+        ToolsConfigManager.Instance.IsShowUIProgramDataHierarchyIcon = GUILayout.Toggle(ToolsConfigManager.Instance.IsShowUIProgramDataHierarchyIcon, "是否显示UIProgramData的Icon");
 
     }
 

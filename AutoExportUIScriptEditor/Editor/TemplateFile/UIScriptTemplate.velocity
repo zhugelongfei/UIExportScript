@@ -6,6 +6,9 @@
  * Author ZhuGeLongFei
  *
  * Do not edit unless you are sure that you know what you are doning
+ * 
+ * Info:
+ *		Get Data Safe Check : $dataSafeCheck
  */
 
 namespace AutoExportScriptData
@@ -27,11 +30,15 @@ namespace AutoExportScriptData
 		{
 			get
 			{
+#if($dataSafeCheck)
 				if (null == $varInfo.privateVariableName)
-#if($varInfo.isGameObjectReference)
+#if($varInfo.isCompArray)
+					Debug.LogError("$varInfo.variableName");
+#elseif($varInfo.isGameObjectReference)
 					$varInfo.privateVariableName = DefaultObjForUI.DefaultGameObject(thisObjRoot, $varInfo.constStrVaiableName);
 #else
 					$varInfo.privateVariableName = DefaultObjForUI.DefaultComponent<$varInfo.type>(thisObjRoot, $varInfo.constStrVaiableName);
+#end
 #end
 				return $varInfo.privateVariableName;
 			}
@@ -71,10 +78,18 @@ namespace AutoExportScriptData
 						{
 #foreach($varInfo in $varList)
 							case $varInfo.constStrVaiableName:
+#if($varInfo.isCompArray)
 #if($varInfo.isGameObjectReference)
-								$varInfo.privateVariableName = programData.gameObject;
+								$varInfo.privateVariableName = System.Array.ConvertAll(exportData.CompReferenceArray, inData => { return inData.gameObject; });
+#else
+								$varInfo.privateVariableName = System.Array.ConvertAll(exportData.CompReferenceArray, inData => { return ($varInfo.fullType)inData; });
+#end ##是否是GameObject引用的判断结束
+#else
+#if($varInfo.isGameObjectReference)
+								$varInfo.privateVariableName = exportData.CompReference.gameObject;
 #else
 								$varInfo.privateVariableName = ($varInfo.fullType)exportData.CompReference;
+#end ##是否是GameObject引用的判断结束
 #end
 								break;
 #end

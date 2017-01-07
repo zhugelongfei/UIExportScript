@@ -124,3 +124,11 @@ F:\AutoExportUIScript-V1.0.4.0\AutoExportUIScriptEditor\bin\Debug\AutoExportUISc
 F:\AutoExportUIScript-V1.0.4.0\AutoExportUIScriptEditor\obj\Debug\AutoExportUIScriptEditor.csprojResolveAssemblyReference.cache
 F:\AutoExportUIScript-V1.0.4.0\AutoExportUIScriptEditor\obj\Debug\AutoExportUIScriptEditor.dll
 F:\AutoExportUIScript-V1.0.4.0\AutoExportUIScriptEditor\obj\Debug\AutoExportUIScriptEditor.pdb
+F:\Git-Repository\UIExportScript\AutoExportUIScriptEditor\bin\Debug\AutoExportUIScriptEditor.dll
+F:\Git-Repository\UIExportScript\AutoExportUIScriptEditor\bin\Debug\AutoExportUIScriptEditor.pdb
+F:\Git-Repository\UIExportScript\AutoExportUIScriptEditor\bin\Debug\AutoExportUIScript.dll
+F:\Git-Repository\UIExportScript\AutoExportUIScriptEditor\bin\Debug\UnityEngine.dll
+F:\Git-Repository\UIExportScript\AutoExportUIScriptEditor\bin\Debug\AutoExportUIScript.pdb
+F:\Git-Repository\UIExportScript\AutoExportUIScriptEditor\obj\Debug\AutoExportUIScriptEditor.csprojResolveAssemblyReference.cache
+F:\Git-Repository\UIExportScript\AutoExportUIScriptEditor\obj\Debug\AutoExportUIScriptEditor.dll
+F:\Git-Repository\UIExportScript\AutoExportUIScriptEditor\obj\Debug\AutoExportUIScriptEditor.pdb

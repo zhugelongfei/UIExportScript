@@ -27,21 +27,7 @@ public class OutLineWindow : ShowUIProgramDataBaseWindow<OutLineWindow.OutLineWi
             GUILayout.Label("ClassName:" + item.Key);
             foreach (UIProgramData curObj in item.Value)
             {
-                EditorGUILayout.BeginHorizontal();
-                //Target game object
-                EditorGUILayout.ObjectField(curObj, curObj.GetType(), true, fieldWidthOption);
-                //Variables
-                foreach (UIExportData data in curObj.ExportData)
-                {
-                    string type = data.CompReference == null ? "GameObject" : data.CompReference.GetType().Name;
-
-                    DrawSplitChar();
-                    GUILayout.Label(type, fieldWidthOption);
-
-                    DrawSplitChar();
-                    GUILayout.Label(data.VariableName, fieldWidthOption);
-                }
-                EditorGUILayout.EndHorizontal();
+                DrawUIProgramData(curObj);
             }
         }
     }

@@ -62,3 +62,7 @@ F:\AutoExportUIScript-V1.0.4.0\AutoExportUIScript\bin\Debug\AutoExportUIScript.p
 F:\AutoExportUIScript-V1.0.4.0\AutoExportUIScript\obj\Debug\AutoExportUIScript.csprojResolveAssemblyReference.cache
 F:\AutoExportUIScript-V1.0.4.0\AutoExportUIScript\obj\Debug\AutoExportUIScript.dll
 F:\AutoExportUIScript-V1.0.4.0\AutoExportUIScript\obj\Debug\AutoExportUIScript.pdb
+F:\Git-Repository\UIExportScript\AutoExportUIScript\bin\Debug\AutoExportUIScript.dll
+F:\Git-Repository\UIExportScript\AutoExportUIScript\bin\Debug\AutoExportUIScript.pdb
+F:\Git-Repository\UIExportScript\AutoExportUIScript\obj\Debug\AutoExportUIScript.dll
+F:\Git-Repository\UIExportScript\AutoExportUIScript\obj\Debug\AutoExportUIScript.pdb

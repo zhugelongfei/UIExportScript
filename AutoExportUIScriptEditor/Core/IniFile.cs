@@ -49,7 +49,7 @@ namespace AutoExportScriptData
                 string value = IniReadValue(section, field.Name);
                 if (string.IsNullOrEmpty(value))
                     continue;
-                field.SetValue(data, IniReadValue(section, field.Name));
+                field.SetValue(data, System.Convert.ChangeType(IniReadValue(section, field.Name), field.FieldType));
             }
             return data;
         }

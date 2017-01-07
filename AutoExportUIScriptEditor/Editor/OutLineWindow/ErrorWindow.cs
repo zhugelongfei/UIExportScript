@@ -26,24 +26,8 @@ public class ErrorWindow : ShowUIProgramDataBaseWindow<ErrorWindow.ErrorWindowDa
         {
             UIProgramData curObj = pDataArray[i];
             if (curObj == null) continue;
-            EditorGUILayout.BeginHorizontal();
 
-            //Target game object
-            EditorGUILayout.ObjectField(curObj, curObj.GetType(), true, fieldWidthOption);
-
-            //Variables
-            foreach (UIExportData uiData in curObj.ExportData)
-            {
-                string className = string.IsNullOrEmpty(curObj.LocalClassName) ? this.data.clsName : curObj.LocalClassName;
-                string type = uiData.CompReference == null ? "GameObject" : uiData.CompReference.GetType().Name;
-
-                DrawSplitChar();
-                GUILayout.Label(type, fieldWidthOption);
-
-                DrawSplitChar();
-                GUILayout.Label(className + "." + uiData.VariableName, fieldWidthOption);
-            }
-            EditorGUILayout.EndHorizontal();
+            DrawUIProgramData(curObj);
         }
     }
 
