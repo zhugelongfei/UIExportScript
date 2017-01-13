@@ -22,7 +22,8 @@ namespace AutoExportScriptData
                 varInfoDic.Add(classVarData.Key, varInfoList);
             }
 
-            velocity.AddValue("dataSafeCheck", false);
+            velocity.AddValue("useGetAttribute", ToolsConfigManager.Instance.UseGetAttribute);
+            velocity.AddValue("dataSafeCheck", ToolsConfigManager.Instance.DataSafeCheck);
             velocity.AddValue("classDic", varInfoDic);
             velocity.ExecuteFile(filePath, ClassName, ".cs");
         }

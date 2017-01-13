@@ -4,6 +4,32 @@ namespace AutoExportScriptData
 {
     internal class FilePathManager
     {
+        private class FilePathData
+        {
+            //CSC编译工具的路径
+            public string cscPath = null;
+
+            //代码生成路径-放在编辑器内的路径
+            public string assetsInsideScriptPath = null;
+
+            //生成的DLL文件名称
+            public string dllFileRelativeFullName = null;
+
+            //代码生成路径-编译为DLL的脚本存放路径
+            public string dllScriptPath = null;
+
+            //依赖DLL的路径
+            public string referenceLibFilePath = null;
+
+            //模板文件路径
+            public string templateFilePath = null;
+
+            //标记图标路径
+            public string starIconFilePath = null;
+        }
+
+        #region 单例
+
         private static FilePathManager instance;
 
         public static FilePathManager Instance
@@ -16,29 +42,15 @@ namespace AutoExportScriptData
             }
         }
 
-        private FilePathManager() { ReadData(); }
+        private FilePathManager()
+        {
+            IniFile ini = GetIniConfig();
+            ini.ReadObject(Section, data);
+        }
 
-        //CSC编译工具的路径
-        private string cscPath = null;
+        #endregion
 
-        //代码生成路径-放在编辑器内的路径
-        private string assetsInsideScriptPath = null;
-
-        //生成的DLL文件名称
-        private string dllFileRelativeFullName = null;
-
-        //代码生成路径-编译为DLL的脚本存放路径
-        private string dllScriptPath = null;
-
-        //依赖DLL的路径
-        private string referenceLibFilePath = null;
-
-        //模板文件路径
-        public string templateFilePath = null;
-
-        //标记图标路径
-        public string starIconFilePath = null;
-
+        private FilePathData data = new FilePathData();
         private const string Section = "FilePathConfig";
         private string iniPath = UnityEngine.Application.dataPath + @"\Editor\UIScriptBuilder\UIExportScriptsConfig.ini";
 
@@ -49,15 +61,18 @@ namespace AutoExportScriptData
 
         public void Write()
         {
-            File.Delete(iniPath);
             IniFile ini = GetIniConfig();
-            ini.WriteObject(Section, this);
+            ini.WriteObject(Section, data);
         }
 
-        public void ReadData()
+        public string GetTemplateFilePath()
         {
-            IniFile ini = GetIniConfig();
-            ini.ReadObject(Section, this);
+            return data.templateFilePath;
+        }
+
+        public string GetStarIconFilePath()
+        {
+            return data.starIconFilePath;
         }
 
         /// <summary>
@@ -66,17 +81,17 @@ namespace AutoExportScriptData
         public string GenerateFilePath(bool isGenDllScript, string ClassName, ref bool isNeedReGenDll)
         {
             isNeedReGenDll = false;
-            if (!Directory.Exists(dllScriptPath))
-                Directory.CreateDirectory(dllScriptPath);
+            if (!Directory.Exists(data.dllScriptPath))
+                Directory.CreateDirectory(data.dllScriptPath);
 
-            if (!Directory.Exists(assetsInsideScriptPath))
-                Directory.CreateDirectory(assetsInsideScriptPath);
+            if (!Directory.Exists(data.assetsInsideScriptPath))
+                Directory.CreateDirectory(data.assetsInsideScriptPath);
 
             //生成脚本路径
-            string filePath = isGenDllScript ? dllScriptPath : assetsInsideScriptPath;
+            string filePath = isGenDllScript ? data.dllScriptPath : data.assetsInsideScriptPath;
 
             //删除另外一个路径存在的同名文件
-            string otherFileName = (isGenDllScript ? assetsInsideScriptPath : dllScriptPath) + ClassName + ".cs";
+            string otherFileName = (isGenDllScript ? data.assetsInsideScriptPath : data.dllScriptPath) + ClassName + ".cs";
             if (File.Exists(otherFileName))
             {
                 File.Delete(otherFileName);
@@ -93,11 +108,11 @@ namespace AutoExportScriptData
         /// </summary>
         public bool CheckCanCompileDll(string assetPath)
         {
-            string[] fileNames = Directory.GetFiles(dllScriptPath, "*.cs");
+            string[] fileNames = Directory.GetFiles(data.dllScriptPath, "*.cs");
             if (fileNames == null || fileNames.Length == 0)
             {
                 //没有要编译的文件，删除DLL
-                string filePath = assetPath + dllFileRelativeFullName;
+                string filePath = assetPath + data.dllFileRelativeFullName;
                 File.Delete(filePath);
                 return false;
             }
@@ -110,12 +125,12 @@ namespace AutoExportScriptData
         public CompileCSharpDll.CompileFileInfo GetCompileConfigInfo()
         {
             CompileCSharpDll.CompileFileInfo info = new CompileCSharpDll.CompileFileInfo();
-            info.compileFilePath = Directory.GetCurrentDirectory() + @"\" + dllScriptPath;
+            info.compileFilePath = Directory.GetCurrentDirectory() + @"\" + data.dllScriptPath;
             info.searchPattern = "*.cs";
-            info.utilFilePath = cscPath;
-            info.dllOutPath = UnityEngine.Application.dataPath + dllFileRelativeFullName;
+            info.utilFilePath = data.cscPath;
+            info.dllOutPath = UnityEngine.Application.dataPath + data.dllFileRelativeFullName;
 
-            string libPath = Directory.GetCurrentDirectory() + referenceLibFilePath;
+            string libPath = Directory.GetCurrentDirectory() + data.referenceLibFilePath;
             info.referenceDllFilePath = Directory.GetFiles(libPath, "*.dll");
 
             return info;

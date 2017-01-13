@@ -16,7 +16,7 @@ namespace AutoExportScriptData
 
         public IniFile(string path)
         {
-            this.Path = path;
+            Path = path;
         }
 
         public void WriteObject(string section, object data)
@@ -49,7 +49,7 @@ namespace AutoExportScriptData
                 string value = IniReadValue(section, field.Name);
                 if (string.IsNullOrEmpty(value))
                     continue;
-                field.SetValue(data, System.Convert.ChangeType(IniReadValue(section, field.Name), field.FieldType));
+                field.SetValue(data, Convert.ChangeType(IniReadValue(section, field.Name), field.FieldType));
             }
             return data;
         }
@@ -74,7 +74,7 @@ namespace AutoExportScriptData
         /// <param name="iValue">值</param>
         public void IniWriteValue(string section, string key, string iValue)
         {
-            WritePrivateProfileString(section, key, iValue, this.Path);
+            WritePrivateProfileString(section, key, iValue, Path);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace AutoExportScriptData
         {
             temp.Remove(0, temp.Length);
 
-            int i = GetPrivateProfileString(section, key, null, temp, StrCount, this.Path);
+            int i = GetPrivateProfileString(section, key, null, temp, StrCount, Path);
             return temp.ToString();
         }
 
@@ -101,7 +101,7 @@ namespace AutoExportScriptData
         {
             byte[] temp = new byte[StrCount];
 
-            int i = GetPrivateProfileString(section, key, "", temp, StrCount, this.Path);
+            int i = GetPrivateProfileString(section, key, "", temp, StrCount, Path);
             return temp;
         }
     }

@@ -1,107 +1,112 @@
 ﻿using UnityEditor;
-using AutoExportScriptData;
 
-[CustomEditor(typeof(UIProgramData))]
-public class UIProgramDataInspector : Editor
+namespace AutoExportScriptData
 {
-    private bool notExport = false;
-    private UIProgramData thisData = null;
-
-    private void OnEnable()
+    [CustomEditor(typeof(UIProgramData)),CanEditMultipleObjects]
+    internal class UIProgramDataInspector : Editor
     {
-        thisData = (target as UIProgramData);
-        notExport = thisData.notExport;
+        private bool notExport = false;
+        private UIProgramData thisData = null;
 
-        SerializedProperty prop = serializedObject.FindProperty("ExportData");
-
-        if (prop != null && prop.arraySize == 0)
+        private void OnEnable()
         {
-            //在添加脚本对象时，就初始化data的长度为1，不用手动设置长度，节省开发时间
-            prop.arraySize = 1;
-            serializedObject.ApplyModifiedProperties();
+            thisData = (target as UIProgramData);
+            notExport = thisData.notExport;
 
-            thisData.ExportData[0].VariableName = thisData.name;
-        }
-    }
+            SerializedProperty prop = serializedObject.FindProperty("ExportData");
 
-    private void OnDisable()
-    {
-        thisData = null;
-    }
-
-    public override void OnInspectorGUI()
-    {
-        //base.OnInspectorGUI();
-
-        SerializedObject serObj = new SerializedObject(target);
-        SerializedProperty exportDataArray = serObj.FindProperty("ExportData");
-
-        if (EditorGUILayout.PropertyField(exportDataArray, UnityEngine.GUILayout.ExpandWidth(false)))
-        {
-            EditorGUI.indentLevel += 1;
-
-            //显示ExportData下边的节点信息
-            exportDataArray.arraySize = EditorGUILayout.IntField("Size", exportDataArray.arraySize);
-
-            for (int index = 0; index < exportDataArray.arraySize; index++)
+            if (prop != null && prop.arraySize == 0)
             {
-                SerializedProperty exportData = exportDataArray.GetArrayElementAtIndex(index);
-                if (EditorGUILayout.PropertyField(exportData))
+                //在添加脚本对象时，就初始化data的长度为1，不用手动设置长度，节省开发时间
+                prop.arraySize = 1;
+                serializedObject.ApplyModifiedProperties();
+
+                thisData.ExportData[0].VariableName = thisData.name;
+            }
+        }
+
+        private void OnDisable()
+        {
+            thisData = null;
+        }
+
+        public override void OnInspectorGUI()
+        {
+            //base.OnInspectorGUI();
+
+            SerializedObject serObj = new SerializedObject(target);
+            SerializedProperty exportDataArray = serObj.FindProperty("ExportData");
+
+            if (EditorGUILayout.PropertyField(exportDataArray, UnityEngine.GUILayout.ExpandWidth(false)))
+            {
+                EditorGUI.indentLevel += 1;
+
+                //显示ExportData下边的节点信息
+                exportDataArray.arraySize = EditorGUILayout.IntField("Size", exportDataArray.arraySize);
+
+                for (int index = 0; index < exportDataArray.arraySize; index++)
                 {
-                    EditorGUI.indentLevel += 1;
-                    //显示Element Index下的节点信息
-                    EditorGUILayout.PropertyField(exportData.FindPropertyRelative("getGameObject"));
-
-                    SerializedProperty isArrayData = exportData.FindPropertyRelative("isArrayData");
-                    EditorGUILayout.PropertyField(isArrayData);
-
-                    EditorGUILayout.PropertyField(exportData.FindPropertyRelative("VariableName"));
-                    if (isArrayData.boolValue)
+                    SerializedProperty exportData = exportDataArray.GetArrayElementAtIndex(index);
+                    if (EditorGUILayout.PropertyField(exportData))
                     {
-                        //数组组件引用
-                        exportData.FindPropertyRelative("CompReference").objectReferenceValue = null;
-                        SerializedProperty compArray = exportData.FindPropertyRelative("CompReferenceArray");
-                        if (compArray != null && compArray.arraySize == 0)
+                        EditorGUI.indentLevel += 1;
+                        //显示Element Index下的节点信息
+                        if (ToolsConfigManager.Instance.OpenGenerateGameObjectRef)
+                            EditorGUILayout.PropertyField(exportData.FindPropertyRelative("getGameObject"));
+
+                        SerializedProperty isArrayData = exportData.FindPropertyRelative("isArrayData");
+
+                        if (ToolsConfigManager.Instance.OpenGenerateArrayRef)
+                            EditorGUILayout.PropertyField(isArrayData);
+
+                        EditorGUILayout.PropertyField(exportData.FindPropertyRelative("VariableName"));
+                        if (isArrayData.boolValue)
                         {
-                            compArray.arraySize = 2;
+                            //数组组件引用
+                            exportData.FindPropertyRelative("CompReference").objectReferenceValue = null;
+                            SerializedProperty compArray = exportData.FindPropertyRelative("CompReferenceArray");
+                            if (compArray != null && compArray.arraySize == 0)
+                            {
+                                compArray.arraySize = 2;
+                            }
+                            EditorGUILayout.PropertyField(compArray, true);
                         }
-                        EditorGUILayout.PropertyField(compArray, true);
+                        else
+                        {
+                            //单一组件引用
+                            exportData.FindPropertyRelative("CompReferenceArray").ClearArray();
+                            EditorGUILayout.PropertyField(exportData.FindPropertyRelative("CompReference"));
+                        }
+                        EditorGUI.indentLevel -= 1;
                     }
-                    else
-                    {
-                        //单一组件引用
-                        exportData.FindPropertyRelative("CompReferenceArray").ClearArray();
-                        EditorGUILayout.PropertyField(exportData.FindPropertyRelative("CompReference"));
-                    }
-                    EditorGUI.indentLevel -= 1;
+                    EditorGUILayout.Space();
                 }
-                EditorGUILayout.Space();
+                EditorGUI.indentLevel -= 1;
             }
-            EditorGUI.indentLevel -= 1;
-        }
 
-        //不导出数据开关
-        notExport = EditorGUILayout.Toggle("Not Export This Data", notExport);
-        if (notExport != thisData.notExport)
-        {
-            //值变化，更改自身以下所有节点的导出值
-            UIProgramData[] datas = thisData.GetComponentsInChildren<UIProgramData>(true);
-            foreach (var item in datas)
+            //不导出数据开关
+            notExport = EditorGUILayout.Toggle("Not Export This Data", notExport);
+            if (notExport != thisData.notExport)
             {
-                item.notExport = notExport;
+                //值变化，更改自身以下所有节点的导出值
+                UIProgramData[] datas = thisData.GetComponentsInChildren<UIProgramData>(true);
+                foreach (var item in datas)
+                {
+                    item.notExport = notExport;
+                }
             }
-        }
 
-        if (UnityEngine.GUILayout.Button("Set the child parentClass name"))
-        {
-            UIProgramData[] datas = thisData.GetComponentsInChildren<UIProgramData>(true);
-            foreach (var item in datas)
+            if (UnityEngine.GUILayout.Button("Set the child parentClass name"))
             {
-                item.LocalClassName = thisData.CreateClassName;
+                UIProgramData[] datas = thisData.GetComponentsInChildren<UIProgramData>(true);
+                foreach (var item in datas)
+                {
+                    item.LocalClassName = thisData.CreateClassName;
+                }
             }
-        }
 
-        //保存数值变化
-        serObj.ApplyModifiedProperties();
+            //保存数值变化
+            serObj.ApplyModifiedProperties();
+        }
     }
 }

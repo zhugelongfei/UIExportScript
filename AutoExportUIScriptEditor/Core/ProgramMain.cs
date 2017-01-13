@@ -1,13 +1,16 @@
 ﻿using UnityEditor;
 
-[InitializeOnLoad]
-public class ProgramMain
+namespace AutoExportScriptData
 {
-    /// <summary>
-    /// 静态构造函数，初始化作用
-    /// </summary>
-    static ProgramMain()
+    [InitializeOnLoad]
+    internal class ProgramMain
     {
-        ComponentHierarchyIcon<AutoExportScriptData.UIProgramData>.Init();
+        /// <summary>
+        /// 静态构造函数，初始化作用
+        /// </summary>
+        static ProgramMain()
+        {
+            ComponentHierarchyIcon<UIProgramData>.Init();
+        }
     }
 }

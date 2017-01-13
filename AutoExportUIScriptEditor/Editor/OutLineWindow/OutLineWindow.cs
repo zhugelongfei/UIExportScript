@@ -1,66 +1,67 @@
 ﻿using UnityEngine;
-using UnityEditor;
-using AutoExportScriptData;
 using System.Collections.Generic;
 
-public class OutLineWindow : ShowUIProgramDataBaseWindow<OutLineWindow.OutLineWindowData>
+namespace AutoExportScriptData
 {
-    public class OutLineWindowData
+    internal class OutLineWindow : ShowUIProgramDataBaseWindow<OutLineWindow.OutLineWindowData>
     {
-        public string clsName;
-    }
-
-    public static string windowName = "Data Out Line";
-
-    public new void OnGUI()
-    {
-        if (base.OnGUI())
-            return;
-
-        //Format
-        Dictionary<string, List<UIProgramData>> className_Data_Dic = FormatUIProgramDataArrayToDic(pDataArray);
-
-        foreach (var item in className_Data_Dic)
+        public class OutLineWindowData
         {
-            //Draw class name
-            DrawParagraphSplitSymbol();
-            GUILayout.Label("ClassName:" + item.Key);
-            foreach (UIProgramData curObj in item.Value)
+            public string clsName;
+        }
+
+        public static string windowName = "Data Out Line";
+
+        public new void OnGUI()
+        {
+            if (base.OnGUI())
+                return;
+
+            //Format
+            Dictionary<string, List<UIProgramData>> className_Data_Dic = FormatUIProgramDataArrayToDic(pDataArray);
+
+            foreach (var item in className_Data_Dic)
             {
-                DrawUIProgramData(curObj);
+                //Draw class name
+                DrawParagraphSplitSymbol();
+                GUILayout.Label("ClassName:" + item.Key);
+                foreach (UIProgramData curObj in item.Value)
+                {
+                    DrawUIProgramData(curObj);
+                }
             }
         }
-    }
 
-    private Dictionary<string, List<UIProgramData>> FormatUIProgramDataArrayToDic(UIProgramData[] pDataArray)
-    {
-        Dictionary<string, List<UIProgramData>> className_Data_Dic = new Dictionary<string, List<UIProgramData>>();
-        for (int i = 0; i < pDataArray.Length; i++)
+        private Dictionary<string, List<UIProgramData>> FormatUIProgramDataArrayToDic(UIProgramData[] pDataArray)
         {
-            UIProgramData curObj = pDataArray[i];
-            if (curObj == null) continue;
-
-            if (!string.IsNullOrEmpty(curObj.CreateClassName))
+            Dictionary<string, List<UIProgramData>> className_Data_Dic = new Dictionary<string, List<UIProgramData>>();
+            for (int i = 0; i < pDataArray.Length; i++)
             {
-                AddValue(className_Data_Dic, curObj.CreateClassName, curObj);
-            }
+                UIProgramData curObj = pDataArray[i];
+                if (curObj == null) continue;
 
-            foreach (UIExportData data in curObj.ExportData)
-            {
-                string className = string.IsNullOrEmpty(curObj.LocalClassName) ? this.data.clsName : curObj.LocalClassName;
+                if (!string.IsNullOrEmpty(curObj.CreateClassName))
+                {
+                    AddValue(className_Data_Dic, curObj.CreateClassName, curObj);
+                }
 
-                AddValue(className_Data_Dic, className, curObj);
+                foreach (UIExportData data in curObj.ExportData)
+                {
+                    string className = string.IsNullOrEmpty(curObj.LocalClassName) ? this.data.clsName : curObj.LocalClassName;
+
+                    AddValue(className_Data_Dic, className, curObj);
+                }
             }
+            return className_Data_Dic;
         }
-        return className_Data_Dic;
-    }
 
-    private void AddValue(Dictionary<string, List<UIProgramData>> className_Data_Dic, string key, UIProgramData value)
-    {
-        if (!className_Data_Dic.ContainsKey(key))
+        private void AddValue(Dictionary<string, List<UIProgramData>> className_Data_Dic, string key, UIProgramData value)
         {
-            className_Data_Dic[key] = new List<UIProgramData>();
+            if (!className_Data_Dic.ContainsKey(key))
+            {
+                className_Data_Dic[key] = new List<UIProgramData>();
+            }
+            className_Data_Dic[key].Add(value);
         }
-        className_Data_Dic[key].Add(value);
     }
 }

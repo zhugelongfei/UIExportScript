@@ -14,10 +14,10 @@ namespace AutoExportScriptData
         public string VariableName = null;          //变量名
     }
 
-    [AddComponentMenu("UIExpand/UI Program Data")]
+    [AddComponentMenu("UIExpand/Program Data"), DisallowMultipleComponent]
     public class UIProgramData : MonoBehaviour
     {
-        public bool   notExport = false;            //是否不导出此物体
+        public bool notExport = false;            //是否不导出此物体
         public string CreateClassName = null;       //需要生成的类的名字
         public string LocalClassName = null;        //所在类的名字
 

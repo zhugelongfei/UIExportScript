@@ -7,7 +7,8 @@
  *
  * Do not edit unless you are sure that you know what you are doning
  * 
- * Info:
+ * Generate Info:
+ *		Use Get And Set		: $useGetAttribute
  *		Get Data Safe Check : $dataSafeCheck
  */
 
@@ -25,6 +26,7 @@ namespace AutoExportScriptData
 
 		#region $varInfo.type $varInfo.variableName
 		private const string $varInfo.constStrVaiableName = "$varInfo.variableName";
+#if($useGetAttribute)  ##使用Get和Set属性
 		private $varInfo.type $varInfo.privateVariableName;
 		public $varInfo.type $varInfo.variableName
 		{
@@ -43,6 +45,10 @@ namespace AutoExportScriptData
 				return $varInfo.privateVariableName;
 			}
 		}
+#else  ##不使用Get和Set属性
+#set($varInfo.privateVariableName=$varInfo.variableName)
+		public $varInfo.type $varInfo.privateVariableName;
+#end
 		#endregion
 #end
 ## 变量End

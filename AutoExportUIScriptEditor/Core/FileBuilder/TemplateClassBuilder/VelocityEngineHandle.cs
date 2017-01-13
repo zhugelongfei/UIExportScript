@@ -33,7 +33,7 @@ namespace AutoExportScriptData
 
                 templateEngine.Init();
 
-                template = templateEngine.GetTemplate(FilePathManager.Instance.templateFilePath);
+                template = templateEngine.GetTemplate(FilePathManager.Instance.GetTemplateFilePath());
             }
             catch (NVelocity.Exception.ResourceNotFoundException re)
             {

@@ -1,25 +1,26 @@
 ﻿using System;
-using AutoExportScriptData;
 
-public class UIExportDataException : Exception
+namespace AutoExportScriptData
 {
-    private UIProgramData[] errorObjs;
-
-    public UIProgramData[] ErrorObjs
+    public class UIExportDataException : Exception
     {
-        get { return errorObjs; }
+        private UIProgramData[] errorObjs;
+
+        public UIProgramData[] ErrorObjs
+        {
+            get { return errorObjs; }
+        }
+
+        public UIExportDataException(string message)
+            : base(message)
+        {
+
+        }
+
+        public UIExportDataException(string message, params UIProgramData[] errorObjs)
+            : this(message)
+        {
+            this.errorObjs = errorObjs;
+        }
     }
-
-    public UIExportDataException(string message)
-        : base(message)
-    {
-
-    }
-
-    public UIExportDataException(string message, params UIProgramData[] errorObjs)
-        : this(message)
-    {
-        this.errorObjs = errorObjs;
-    }
-
 }

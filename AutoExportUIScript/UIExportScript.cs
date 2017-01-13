@@ -2,6 +2,7 @@
 
 namespace AutoExportScriptData
 {
+    [DisallowMultipleComponent]
     public class UIExportScript : MonoBehaviour
     {
         // 生成的主类名(等于文件名)

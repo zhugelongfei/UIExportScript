@@ -1,12 +1,16 @@
 ﻿using UnityEditor;
 
-public class HotKey : Editor
+namespace AutoExportScriptData
 {
-
-    [MenuItem("AutoExportUIScript/Config/Show Hierarchy Icon %1")]
-    public static void OpenOrCloseHierarchyUIProgramDataIcon()
+    internal class HotKey : Editor
     {
-        ToolsConfigManager.Instance.IsShowUIProgramDataHierarchyIcon = !ToolsConfigManager.Instance.IsShowUIProgramDataHierarchyIcon;
-    }
+        [MenuItem("AutoExportUIScript/Config/Show Hierarchy Icon %1")]
+        public static void OpenOrCloseHierarchyUIProgramDataIcon()
+        {
+            ToolsConfigManager.Instance.IsShowUIProgramDataHierarchyIcon = !ToolsConfigManager.Instance.IsShowUIProgramDataHierarchyIcon;
+            ToolsConfigManager.Instance.SaveDataToIni();
+            EditorApplication.RepaintHierarchyWindow();
+        }
 
+    }
 }
