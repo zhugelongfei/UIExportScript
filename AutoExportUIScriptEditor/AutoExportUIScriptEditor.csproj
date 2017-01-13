@@ -80,10 +80,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Icon\Ge.png" />
-    <Content Include="Icon\Zhu.png" />
-    <Content Include="Icon\Fei.png" />
-    <Content Include="Icon\Long.png" />
+    <Content Include="Icon\sign-check.png" />
+    <Content Include="Icon\sign-error.png" />
+    <Content Include="Icon\sign-warning.png" />
     <Content Include="UIScriptCompileLibrary\AutoExportUIScript.dll" />
     <Content Include="UIScriptCompileLibrary\UnityEngine.dll" />
   </ItemGroup>

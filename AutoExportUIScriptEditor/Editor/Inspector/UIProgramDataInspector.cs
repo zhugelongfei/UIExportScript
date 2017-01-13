@@ -2,7 +2,7 @@
 
 namespace AutoExportScriptData
 {
-    [CustomEditor(typeof(UIProgramData)),CanEditMultipleObjects]
+    [CustomEditor(typeof(UIProgramData))]
     internal class UIProgramDataInspector : Editor
     {
         private bool notExport = false;
@@ -37,7 +37,10 @@ namespace AutoExportScriptData
             SerializedObject serObj = new SerializedObject(target);
             SerializedProperty exportDataArray = serObj.FindProperty("ExportData");
 
-            if (EditorGUILayout.PropertyField(exportDataArray, UnityEngine.GUILayout.ExpandWidth(false)))
+            EditorGUILayout.PropertyField(serObj.FindProperty("CreateClassName"));
+            EditorGUILayout.PropertyField(serObj.FindProperty("LocalClassName"));
+
+            if (EditorGUILayout.PropertyField(exportDataArray))
             {
                 EditorGUI.indentLevel += 1;
 
