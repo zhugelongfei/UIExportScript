@@ -8,14 +8,19 @@
         public string variableName { get; set; }
         public bool isGameObjectReference { get; set; }
         public string fullType { get; set; }
-        public bool isCompArray { get; set; }
+        public bool isArrayRef { get; set; }
 
+        /// <summary>
+        /// 根据UIExportData信息生成VariableInfo
+        /// </summary>
+        /// <param name="data">导出数据</param>
+        /// <returns>变量信息</returns>
         public static VariableInfo GetVariableInfoFromUIExportData(UIExportData data)
         {
             VariableInfo info = new VariableInfo();
 
-            info.isCompArray = data.isArrayData;
-            info.isGameObjectReference = data.getGameObject;
+            info.isArrayRef = data.isArrayData;
+            info.isGameObjectReference = data.isGameObjectRef;
 
             info.variableName = data.VariableName;
             info.privateVariableName = "_" + data.VariableName;
@@ -35,7 +40,7 @@
                 arrayType = "";
             }
 
-            if (data.getGameObject)
+            if (data.isGameObjectRef)
             {
                 info.fullType = "GameObject";
             }

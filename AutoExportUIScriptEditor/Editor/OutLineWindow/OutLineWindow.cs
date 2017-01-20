@@ -38,7 +38,7 @@ namespace AutoExportScriptData
             for (int i = 0; i < pDataArray.Length; i++)
             {
                 UIProgramData curObj = pDataArray[i];
-                if (curObj == null) continue;
+                if (curObj == null || curObj.notExport) continue;
 
                 if (!string.IsNullOrEmpty(curObj.CreateClassName))
                 {

@@ -112,11 +112,17 @@ namespace AutoExportScriptData
             strBuilder.Remove(0, strBuilder.Length);
         }
 
+        /// <summary>
+        /// 刷新缓冲区
+        /// </summary>
         public void Flush()
         {
             writer.Flush();
         }
 
+        /// <summary>
+        /// 关闭输入流
+        /// </summary>
         public void Close()
         {
             writer.Close();

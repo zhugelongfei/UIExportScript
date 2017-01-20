@@ -34,7 +34,7 @@ namespace AutoExportScriptData
 			{
 #if($dataSafeCheck)
 				if (null == $varInfo.privateVariableName)
-#if($varInfo.isCompArray)
+#if($varInfo.isArrayRef)
 					Debug.LogError("$varInfo.variableName");
 #elseif($varInfo.isGameObjectReference)
 					$varInfo.privateVariableName = DefaultObjForUI.DefaultGameObject(thisObjRoot, $varInfo.constStrVaiableName);
@@ -80,7 +80,7 @@ namespace AutoExportScriptData
 			{
 #foreach($varInfo in $varList)
 				case $varInfo.constStrVaiableName:
-#if($varInfo.isCompArray)
+#if($varInfo.isArrayRef)
 #if($varInfo.isGameObjectReference)
 					$varInfo.privateVariableName = System.Array.ConvertAll(exportData.CompReferenceArray, inData => { return inData.gameObject; });
 #else

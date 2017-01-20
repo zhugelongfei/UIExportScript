@@ -103,7 +103,7 @@ namespace AutoExportScriptData
             {
                 string type = "Null";
 
-                if (data.getGameObject)
+                if (data.isGameObjectRef)
                 {
                     if (data.isArrayData)
                         type = "GameObject[]";

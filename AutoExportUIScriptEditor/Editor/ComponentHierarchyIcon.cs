@@ -45,8 +45,6 @@ namespace AutoExportScriptData
 
         public void Stop()
         {
-            if (feiIcon != null)
-                Object.DestroyImmediate(feiIcon);
             feiIcon = null;
             if (allComponentDic != null)
                 allComponentDic.Clear();

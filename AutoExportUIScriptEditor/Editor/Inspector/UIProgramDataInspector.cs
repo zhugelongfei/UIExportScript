@@ -2,16 +2,14 @@
 
 namespace AutoExportScriptData
 {
-    [CustomEditor(typeof(UIProgramData))]
+    [CustomEditor(typeof(UIProgramData)),CanEditMultipleObjects]
     internal class UIProgramDataInspector : Editor
     {
-        private bool notExport = false;
         private UIProgramData thisData = null;
 
         private void OnEnable()
         {
             thisData = (target as UIProgramData);
-            notExport = thisData.notExport;
 
             SerializedProperty prop = serializedObject.FindProperty("ExportData");
 
@@ -55,7 +53,7 @@ namespace AutoExportScriptData
                         EditorGUI.indentLevel += 1;
                         //显示Element Index下的节点信息
                         if (ToolsConfigManager.Instance.OpenGenerateGameObjectRef)
-                            EditorGUILayout.PropertyField(exportData.FindPropertyRelative("getGameObject"));
+                            EditorGUILayout.PropertyField(exportData.FindPropertyRelative("isGameObjectRef"));
 
                         SerializedProperty isArrayData = exportData.FindPropertyRelative("isArrayData");
 
@@ -78,7 +76,12 @@ namespace AutoExportScriptData
                         {
                             //单一组件引用
                             exportData.FindPropertyRelative("CompReferenceArray").ClearArray();
-                            EditorGUILayout.PropertyField(exportData.FindPropertyRelative("CompReference"));
+                            SerializedProperty compRef = exportData.FindPropertyRelative("CompReference");
+                            if (compRef.objectReferenceValue == null)
+                            {
+                                compRef.objectReferenceValue = thisData.transform;
+                            }
+                            EditorGUILayout.PropertyField(compRef);
                         }
                         EditorGUI.indentLevel -= 1;
                     }
@@ -88,18 +91,18 @@ namespace AutoExportScriptData
             }
 
             //不导出数据开关
-            notExport = EditorGUILayout.Toggle("Not Export This Data", notExport);
-            if (notExport != thisData.notExport)
+            EditorGUILayout.PropertyField(serObj.FindProperty("notExport"));
+            if (UnityEngine.GUILayout.Button("Set the child notExport"))
             {
-                //值变化，更改自身以下所有节点的导出值
+                //更改自身以下所有节点的导出值
                 UIProgramData[] datas = thisData.GetComponentsInChildren<UIProgramData>(true);
                 foreach (var item in datas)
                 {
-                    item.notExport = notExport;
+                    item.notExport = serObj.FindProperty("notExport").boolValue;
                 }
             }
 
-            if (UnityEngine.GUILayout.Button("Set the child parentClass name"))
+            if (UnityEngine.GUILayout.Button("Set the child parentClass"))
             {
                 UIProgramData[] datas = thisData.GetComponentsInChildren<UIProgramData>(true);
                 foreach (var item in datas)
