@@ -108,7 +108,7 @@ if not exist $(SolutionDir)Assets\Editor\UIScriptBuilder\Icon md $(SolutionDir)A
 
 copy $(TargetPath) $(SolutionDir)Assets\Editor\UIScriptBuilder\
 
-if not exist $(TargetDir)NVelocity.dll $(SolutionDir)Assets\Editor\UIScriptBuilder\NVelocity.dll copy $(TargetDir)NVelocity.dll $(SolutionDir)Assets\Editor\UIScriptBuilder\NVelocity.dll
+copy $(TargetDir)NVelocity.dll $(SolutionDir)Assets\Editor\UIScriptBuilder\NVelocity.dll
 
 copy $(ProjectDir)Icon\ $(SolutionDir)Assets\Editor\UIScriptBuilder\Icon\
 
