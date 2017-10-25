@@ -65,11 +65,11 @@
                 data.isShowUIProgramDataHierarchyIcon = value;
                 if (data.isShowUIProgramDataHierarchyIcon)
                 {
-                    ComponentHierarchyIcon<UIProgramData>.Open();
+                    UIProgramDataHierarchyIcon.Open();
                 }
                 else
                 {
-                    ComponentHierarchyIcon<UIProgramData>.Close();
+                    UIProgramDataHierarchyIcon.Close();
                 }
             }
         }

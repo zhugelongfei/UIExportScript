@@ -15,6 +15,7 @@ namespace AutoExportScriptData
                 return;
             }
 
+            GUILayout.BeginHorizontal();
             //导出脚本
             if (GUILayout.Button("Export Inside Script"))
             {
@@ -25,6 +26,14 @@ namespace AutoExportScriptData
             if (GUILayout.Button("Export Dll Script"))
             {
                 ExportScript(true);
+            }
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            //编译Dll
+            if (GUILayout.Button("Compile dll"))
+            {
+                CompileDll();
             }
 
             //大纲
@@ -37,11 +46,7 @@ namespace AutoExportScriptData
                     (OutLineWindow.windowName, expScript.GetComponentsInChildren<UIProgramData>(true), data);
             }
 
-            //编译Dll
-            if (GUILayout.Button("Compile dll"))
-            {
-                CompileDll();
-            }
+            GUILayout.EndHorizontal();
 
             GUILayout.Label("by - ZhuGeLongFei");
         }
@@ -94,6 +99,7 @@ namespace AutoExportScriptData
 
         private void CompileDll()
         {
+            FilePathManager.Instance.DeleteDllFile();
             //检测是否有脚本可以编译
             bool canComp = FilePathManager.Instance.CheckCanCompileDll(Application.dataPath);
             if (canComp)
@@ -112,7 +118,6 @@ namespace AutoExportScriptData
         {
             if (!CompileCSharpDll.isFinished)
                 return;
-            Debug.Log("刷新Assets");
             CompileCSharpDll.isFinished = false;
             EditorApplication.update -= WaitForRefreshAssets;
             AssetDatabase.Refresh();

@@ -24,8 +24,11 @@ namespace AutoExportScriptData
             //模板文件路径
             public string templateFilePath = null;
 
-            //标记图标路径
-            public string starIconFilePath = null;
+            //正确标记图标路径
+            public string correctIconFilePath = null;
+
+            //正确标记图标路径
+            public string errorIconFilePath = null;
         }
 
         #region 单例
@@ -70,9 +73,14 @@ namespace AutoExportScriptData
             return data.templateFilePath;
         }
 
-        public string GetStarIconFilePath()
+        public string GetCorrectIconFilePath()
         {
-            return data.starIconFilePath;
+            return data.correctIconFilePath;
+        }
+
+        public string GetErrorIconFilePath()
+        {
+            return data.errorIconFilePath;
         }
 
         /// <summary>
@@ -135,5 +143,18 @@ namespace AutoExportScriptData
 
             return info;
         }
+
+        /// <summary>
+        /// 删除DLL脚本
+        /// </summary>
+        public void DeleteDllFile()
+        {
+            string dllPath = UnityEngine.Application.dataPath + data.dllFileRelativeFullName;
+            if (File.Exists(dllPath))
+            {
+                File.Delete(dllPath);
+            }
+        }
+
     }
 }

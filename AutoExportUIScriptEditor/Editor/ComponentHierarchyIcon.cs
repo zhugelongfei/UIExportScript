@@ -4,24 +4,36 @@ using System.Collections.Generic;
 
 namespace AutoExportScriptData
 {
-    internal class ComponentHierarchyIcon<T>
-        where T : Component
+    internal class UIProgramDataHierarchyIcon
     {
-        public static ComponentHierarchyIcon<T> curUse = null;
-        private Texture2D feiIcon;
-        private Dictionary<int, T> allComponentDic;
+        public static UIProgramDataHierarchyIcon curUse = null;
+        private Texture2D correctIcon = null;
+        private Texture2D errorIcon = null;
 
-        public ComponentHierarchyIcon()
+        private Dictionary<int, UIProgramData> allComponentDic = null;
+        private GUIStyle style = new GUIStyle();
+        private Rect drawRect = new Rect();
+
+        public UIProgramDataHierarchyIcon()
         {
-            feiIcon = AssetDatabase.LoadAssetAtPath(FilePathManager.Instance.GetStarIconFilePath(), typeof(Texture2D)) as Texture2D;
-            if (feiIcon == null)
+            correctIcon = AssetDatabase.LoadAssetAtPath(FilePathManager.Instance.GetCorrectIconFilePath(), typeof(Texture2D)) as Texture2D;
+            errorIcon = AssetDatabase.LoadAssetAtPath(FilePathManager.Instance.GetErrorIconFilePath(), typeof(Texture2D)) as Texture2D;
+            if (correctIcon == null || errorIcon == null)
             {
-                Debug.LogError("Star icon is not find. Please check ini path.");
+                Debug.LogError("Icon is not find. Please check ini path.");
+                Debug.LogError(FilePathManager.Instance.GetCorrectIconFilePath());
                 return;
             }
-            allComponentDic = new Dictionary<int, T>();
+            allComponentDic = new Dictionary<int, UIProgramData>();
 
             EditorApplication.hierarchyWindowItemOnGUI += OnDrawHierarchyWindowItem;
+
+            style.normal.textColor = Color.white;
+            style.fontStyle = FontStyle.Bold;
+            style.fontSize = 12;
+
+            drawRect.width = 16;
+            drawRect.height = 16;
         }
 
         /// <summary>
@@ -31,7 +43,7 @@ namespace AutoExportScriptData
         {
             Close();
 
-            curUse = new ComponentHierarchyIcon<T>();
+            curUse = new UIProgramDataHierarchyIcon();
         }
 
         /// <summary>
@@ -45,23 +57,12 @@ namespace AutoExportScriptData
 
         public void Stop()
         {
-            feiIcon = null;
+            correctIcon = null;
             if (allComponentDic != null)
                 allComponentDic.Clear();
             allComponentDic = null;
 
             EditorApplication.hierarchyWindowItemOnGUI -= OnDrawHierarchyWindowItem;
-        }
-
-        /// <summary>
-        /// 静态构造函数，初始化作用
-        /// </summary>
-        public static void Init()
-        {
-            if (ToolsConfigManager.Instance.IsShowUIProgramDataHierarchyIcon)
-            {
-                Open();
-            }
         }
 
         /// <summary>
@@ -71,7 +72,7 @@ namespace AutoExportScriptData
         {
             if (!allComponentDic.ContainsKey(instanceID) || allComponentDic[instanceID] == null)
             {
-                T data = GetComponentFromObj(instanceID);
+                UIProgramData data = GetComponentFromObj(instanceID);
                 if (data == null)
                 {
                     allComponentDic.Remove(instanceID);
@@ -81,15 +82,64 @@ namespace AutoExportScriptData
                 allComponentDic[instanceID] = data;
             }
 
-            Rect drawRect = new Rect(selectionRect.x + selectionRect.width - 16, selectionRect.y, 16, 16);
-            GUI.DrawTexture(drawRect, feiIcon);
+            Texture2D icon = CheckProDataIsRight(instanceID) ? correctIcon : errorIcon;
+
+            drawRect.x = selectionRect.x + selectionRect.width - 16;
+            drawRect.y = selectionRect.y;
+
+            GUI.DrawTexture(drawRect, icon);
+
+            drawRect.x -= 18;
+            drawRect.y += 1;
+
+            GameObject gameObj = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
+            UIProgramData[] dataList = gameObj.GetComponentsInChildren<UIProgramData>();
+
+            GUI.Label(drawRect, dataList.Length.ToString(), style);
         }
 
-        private T GetComponentFromObj(int instanceID)
+        private UIProgramData GetComponentFromObj(int instanceID)
         {
             GameObject data = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
             if (data == null) return null;
-            return data.GetComponent<T>();
+            return data.GetComponent<UIProgramData>();
         }
+
+        /// <summary>
+        /// 检测UI挂载的数据是否正确
+        /// </summary>
+        private bool CheckProDataIsRight(int instanceID)
+        {
+            if (allComponentDic[instanceID] == null)
+                return false;
+
+            UIProgramData data = allComponentDic[instanceID];
+
+            if (data.ExportData == null)
+                return false;
+
+            foreach (var item in data.ExportData)
+            {
+                if (string.IsNullOrEmpty(item.VariableName))
+                    return false;
+
+                if (item.isArrayData)
+                {
+                    foreach (var comp in item.CompReferenceArray)
+                    {
+                        if (comp == null)
+                            return false;
+                    }
+                }
+                else
+                {
+                    if (item.CompReference == null)
+                        return false;
+                }
+            }
+
+            return true;
+        }
+
     }
 }

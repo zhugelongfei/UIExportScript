@@ -82,9 +82,9 @@ namespace AutoExportScriptData
 				case $varInfo.constStrVaiableName:
 #if($varInfo.isArrayRef)
 #if($varInfo.isGameObjectReference)
-					$varInfo.privateVariableName = System.Array.ConvertAll(exportData.CompReferenceArray, inData => { return inData.gameObject; });
+					$varInfo.privateVariableName = System.Array.ConvertAll(exportData.CompReferenceArray, inData => { return inData == null ? null : inData.gameObject; });
 #else
-					$varInfo.privateVariableName = System.Array.ConvertAll(exportData.CompReferenceArray, inData => { return ($varInfo.fullType)inData; });
+					$varInfo.privateVariableName = System.Array.ConvertAll(exportData.CompReferenceArray, inData => { return inData is $varInfo.fullType ? ($varInfo.fullType)inData : null; });
 #end ##是否是GameObject引用的判断结束
 #else
 #if($varInfo.isGameObjectReference)

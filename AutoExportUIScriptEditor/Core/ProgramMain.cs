@@ -10,7 +10,10 @@ namespace AutoExportScriptData
         /// </summary>
         static ProgramMain()
         {
-            ComponentHierarchyIcon<UIProgramData>.Init();
+            if (ToolsConfigManager.Instance.IsShowUIProgramDataHierarchyIcon)
+            {
+                UIProgramDataHierarchyIcon.Open();
+            }
         }
     }
 }

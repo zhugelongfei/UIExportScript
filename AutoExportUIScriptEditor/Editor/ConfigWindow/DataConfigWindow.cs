@@ -43,23 +43,23 @@ namespace AutoExportScriptData
 
             editEnable = EditorGUILayout.BeginToggleGroup("Option Setting", editEnable);
 
-            ToolsConfigManager.Instance.IsShowUIProgramDataHierarchyIcon = ShowBool("显示UIProgramData的Icon", ToolsConfigManager.Instance.IsShowUIProgramDataHierarchyIcon);
+            ToolsConfigManager.Instance.IsShowUIProgramDataHierarchyIcon = ShowBool("Hierarchy面板显示UIProgramData的状态", ToolsConfigManager.Instance.IsShowUIProgramDataHierarchyIcon);
 
-            ToolsConfigManager.Instance.UseGetAttribute = EditorGUILayout.BeginToggleGroup("使用Get属性（保证数据的只读性）", ToolsConfigManager.Instance.UseGetAttribute);
+            ToolsConfigManager.Instance.UseGetAttribute = EditorGUILayout.BeginToggleGroup("导出字段使用Get属性（保证数据的只读性）", ToolsConfigManager.Instance.UseGetAttribute);
 
             if (!ToolsConfigManager.Instance.UseGetAttribute)
             {
-                GUILayout.Label("     Note:不使用Get，是为了提升字段的访问速度。", noteStyle);
+                GUILayout.Label("     Note:不使用Get可以提升字段的访问速度。", noteStyle);
                 GUILayout.Label("     但是一定要注意，不要在外部更改这个字段", noteStyle);
             }
             EditorGUI.indentLevel += 1;
-            ToolsConfigManager.Instance.DataSafeCheck = ShowBool("检测数据安全性", ToolsConfigManager.Instance.DataSafeCheck);
+            ToolsConfigManager.Instance.DataSafeCheck = ShowBool("检测数据安全性（如果字段为空，则会返回一个新的实例）", ToolsConfigManager.Instance.DataSafeCheck);
             EditorGUI.indentLevel -= 1;
             EditorGUILayout.EndToggleGroup();
 
-            ToolsConfigManager.Instance.OpenGenerateGameObjectRef = ShowBool("获取物体引用", ToolsConfigManager.Instance.OpenGenerateGameObjectRef);
+            ToolsConfigManager.Instance.OpenGenerateGameObjectRef = ShowBool("Inspector显示Is Game Object Ref", ToolsConfigManager.Instance.OpenGenerateGameObjectRef);
 
-            ToolsConfigManager.Instance.OpenGenerateArrayRef = ShowBool("获取数组引用", ToolsConfigManager.Instance.OpenGenerateArrayRef);
+            ToolsConfigManager.Instance.OpenGenerateArrayRef = ShowBool("Inspector显示Is Array Data", ToolsConfigManager.Instance.OpenGenerateArrayRef);
 
             EditorGUILayout.EndToggleGroup();
 

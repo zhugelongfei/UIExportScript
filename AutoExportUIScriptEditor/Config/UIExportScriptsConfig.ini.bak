@@ -4,6 +4,7 @@ openGenerateGameObjectRef=True
 openGenerateArrayRef=True
 dataSafeCheck=False
 useGetAttribute=False
+
 [FilePathConfig]
 cscPath=C:\Windows\Microsoft.NET\Framework\v3.5\csc.exe
 assetsInsideScriptPath=Assets\Scripts\GUI\Auto\
@@ -11,4 +12,4 @@ dllFileRelativeFullName=\Plugins\UIScripts.dll
 dllScriptPath=UIScripts\
 referenceLibFilePath=\UIScriptCompileLibrary\
 templateFilePath=\Editor\UIScriptBuilder\TemplateFile\UIScriptTemplate.velocity
-starIconFilePath=Assets\Editor\UIScriptBuilder\Icon\Long.png
+starIconFilePath=Assets\Editor\UIScriptBuilder\Icon\sign-check.png
