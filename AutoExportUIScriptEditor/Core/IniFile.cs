@@ -49,7 +49,17 @@ namespace AutoExportScriptData
                 string value = IniReadValue(section, field.Name);
                 if (string.IsNullOrEmpty(value))
                     continue;
-                field.SetValue(data, Convert.ChangeType(IniReadValue(section, field.Name), field.FieldType));
+
+                if (typeof(System.Enum).IsAssignableFrom(field.FieldType))
+                {
+                    //是枚举类型
+                    field.SetValue(data, Enum.Parse(field.FieldType, value));
+                }
+                else
+                {
+                    //普通类型
+                    field.SetValue(data, Convert.ChangeType(value, field.FieldType));
+                }
             }
             return data;
         }

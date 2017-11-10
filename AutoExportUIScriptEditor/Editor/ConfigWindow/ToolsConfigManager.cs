@@ -2,6 +2,24 @@
 {
     internal class ToolsConfigManager
     {
+        public enum CodeStyle
+        {
+            /// <summary>
+            /// 硬编码
+            /// </summary>
+            HardCoded,
+
+            /// <summary>
+            /// 字段特性
+            /// </summary>
+            Attribute,
+
+            /// <summary>
+            /// 反射字段
+            /// </summary>
+            Reflection,
+        }
+
         private class ToolsConfigData
         {
             /// <summary>
@@ -29,6 +47,10 @@
             /// </summary>
             public bool useGetAttribute = false;
 
+            /// <summary>
+            /// 初始化UIData数据的方式
+            /// </summary>
+            public CodeStyle codeStyle = CodeStyle.HardCoded;
         }
 
         #region 单例
@@ -119,6 +141,17 @@
                     return;
 
                 data.dataSafeCheck = value;
+            }
+        }
+
+        public CodeStyle UIDataCodeStyle
+        {
+            get { return data.codeStyle; }
+            set
+            {
+                if (data.codeStyle == value)
+                    return;
+                data.codeStyle = value;
             }
         }
 

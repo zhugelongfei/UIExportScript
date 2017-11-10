@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 namespace AutoExportScriptData
 {
@@ -30,7 +31,7 @@ namespace AutoExportScriptData
         /// </summary>
         /// <param name="thisObjRoot">物体根节点</param>
         /// <param name="handle">赋值回调</param>
-        public static void ForEachData(GameObject thisObjRoot, SetUIProgramDataCompReference handle)
+        public static void ForEachDataByCode(GameObject thisObjRoot, SetUIProgramDataCompReference handle)
         {
             if (handle == null || thisObjRoot == null)
                 return;
@@ -48,6 +49,70 @@ namespace AutoExportScriptData
                     {
                         UIExportData exportData = programData.ExportData[iIndex];
                         handle(programData, exportData);
+                    }
+                }
+            }
+        }
+
+        /*
+         * UIExportData 三种数据容器 1：Dic 2：List 3：LinkedList
+         *      据测试表明，使用已经开辟连续控件List的速度要比其他二者要快很多。
+         * 而LinkedList由于每次Add都去寻找碎片内存空间，所以速度是最慢的。其次
+         * 是计算hash值的Dic。因一般UI的数据引用都不会超出1K，故使用List初始容
+         * 器为1K即可。
+         */
+        public static List<UIExportData> dataList = new List<UIExportData>(1024);
+
+        /// <summary>
+        /// 遍历指定物体节点下的所有UIProgramData，然后根据字段名反射赋值
+        /// </summary>
+        /// <param name="rootObj">物体根节点</param>
+        /// <param name="uiData">UIData对象</param>
+        public static void ForEachDataByAttribute(GameObject rootObj, object uiData)
+        {
+            dataList.Clear();
+            if (rootObj == null || uiData == null)
+                return;
+
+            UIProgramData[] allData = rootObj.GetComponentsInChildren<UIProgramData>(true);
+            if (null == allData || allData.Length == 0)
+                return;
+
+            for (int iLoop = 0; iLoop < allData.Length; iLoop++)
+            {
+                UIProgramData programData = allData[iLoop];
+                if (null != programData.ExportData && programData.ExportData.Length > 0)
+                {
+                    for (int iIndex = 0; iIndex < programData.ExportData.Length; iIndex++)
+                    {
+                        UIExportData exportData = programData.ExportData[iIndex];
+                        dataList.Add(exportData);
+                    }
+                }
+            }
+
+            System.Type dataType = uiData.GetType();
+            System.Reflection.FieldInfo[] fieldInfoArr = dataType.GetFields();
+            foreach (var field in fieldInfoArr)
+            {
+                object[] objAtts = field.GetCustomAttributes(typeof(UIDataAttribute), false);
+                if (objAtts != null && objAtts.Length > 0)
+                {
+                    for (int j = 0, jMax = objAtts.Length; j < jMax; j++)
+                    {
+                        if (objAtts[j] == null)
+                            continue;
+                        UIDataAttribute dataAtt = objAtts[j] as UIDataAttribute;
+
+                        for (int x = 0, xMax = dataList.Count; x < xMax; x++)
+                        {
+                            UIExportData exportData = dataList[x];
+                            if (exportData.VariableName.Equals(dataAtt.FieldName))
+                            {
+                                field.SetValue(uiData, exportData.CompReference);
+                                break;
+                            }
+                        }
                     }
                 }
             }

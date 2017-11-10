@@ -24,6 +24,7 @@ namespace AutoExportScriptData
 
             velocity.AddValue("useGetAttribute", ToolsConfigManager.Instance.UseGetAttribute);
             velocity.AddValue("dataSafeCheck", ToolsConfigManager.Instance.DataSafeCheck);
+            velocity.AddValue("codeStyle", ToolsConfigManager.Instance.UIDataCodeStyle);
             velocity.AddValue("classDic", varInfoDic);
             velocity.ExecuteFile(filePath, ClassName, ".cs");
         }

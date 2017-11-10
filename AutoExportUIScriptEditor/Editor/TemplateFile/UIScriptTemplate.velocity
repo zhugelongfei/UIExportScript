@@ -25,8 +25,13 @@ namespace AutoExportScriptData
 #foreach($varInfo in $varList)
 
 		#region $varInfo.type $varInfo.variableName
+#if($codeStyle==0)
 		private const string $varInfo.constStrVaiableName = "$varInfo.variableName";
+#end
 #if($useGetAttribute)  ##使用Get和Set属性
+#if($codeStyle==1)
+		[UIData("$varInfo.variableName")]
+#end
 		private $varInfo.type $varInfo.privateVariableName;
 		public $varInfo.type $varInfo.variableName
 		{
@@ -37,9 +42,9 @@ namespace AutoExportScriptData
 #if($varInfo.isArrayRef)
 					Debug.LogError("$varInfo.variableName");
 #elseif($varInfo.isGameObjectReference)
-					$varInfo.privateVariableName = DefaultObjForUI.DefaultGameObject(thisObjRoot, $varInfo.constStrVaiableName);
+					$varInfo.privateVariableName = DefaultObjForUI.DefaultGameObject(thisObjRoot, "$varInfo.variableName");
 #else
-					$varInfo.privateVariableName = DefaultObjForUI.DefaultComponent<$varInfo.type>(thisObjRoot, $varInfo.constStrVaiableName);
+					$varInfo.privateVariableName = DefaultObjForUI.DefaultComponent<$varInfo.type>(thisObjRoot, "$varInfo.variableName");
 #end
 #end
 				return $varInfo.privateVariableName;
@@ -47,6 +52,9 @@ namespace AutoExportScriptData
 		}
 #else  ##不使用Get和Set属性
 #set($varInfo.privateVariableName=$varInfo.variableName)
+#if($codeStyle==1)
+		[UIData("$varInfo.variableName")]
+#end
 		public $varInfo.type $varInfo.privateVariableName;
 #end
 		#endregion
@@ -69,10 +77,15 @@ namespace AutoExportScriptData
 			thisObjRoot = objRoot;
 			thisObjRoot.SetActive(true);
 			
-            UIProgramData.ForEachData(thisObjRoot, SetDataHandle);
+#if($codeStyle==0)
+            UIProgramData.ForEachDataByCode(thisObjRoot, SetDataHandle);
+#elseif($codeStyle==1)
+			UIProgramData.ForEachDataByAttribute(thisObjRoot, this);
+#end
 		}
 ## Init函数End
 
+#if($codeStyle==0)
 ## SetDataHandle函数Start
         private void SetDataHandle(UIProgramData programData, UIExportData exportData)
         {
@@ -99,6 +112,7 @@ namespace AutoExportScriptData
 		}
 ## SetDataHandle函数End
 
+#end
 ## Clear函数Start
 		public void Clear()
 		{

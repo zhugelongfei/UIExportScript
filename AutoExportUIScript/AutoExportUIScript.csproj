@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="DefaultObjForUI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UIDataAttribute.cs" />
     <Compile Include="UIExportScript.cs" />
     <Compile Include="UIProgramData.cs" />
   </ItemGroup>
