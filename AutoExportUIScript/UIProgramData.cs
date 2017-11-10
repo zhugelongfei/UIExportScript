@@ -91,8 +91,7 @@ namespace AutoExportScriptData
                 }
             }
 
-            System.Type dataType = uiData.GetType();
-            System.Reflection.FieldInfo[] fieldInfoArr = dataType.GetFields();
+            System.Reflection.FieldInfo[] fieldInfoArr = uiData.GetType().GetFields(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public);
             foreach (var field in fieldInfoArr)
             {
                 object[] objAtts = field.GetCustomAttributes(typeof(UIDataAttribute), false);
@@ -104,16 +103,57 @@ namespace AutoExportScriptData
                             continue;
                         UIDataAttribute dataAtt = objAtts[j] as UIDataAttribute;
 
-                        for (int x = 0, xMax = dataList.Count; x < xMax; x++)
+                        SetFieldValue(uiData, field, dataAtt);
+                    }
+                }
+            }
+        }
+
+        private static void SetFieldValue(object uiData, System.Reflection.FieldInfo field, UIDataAttribute dataAtt)
+        {
+            for (int x = 0, xMax = dataList.Count; x < xMax; x++)
+            {
+                UIExportData exportData = dataList[x];
+                if (exportData != null && exportData.VariableName.Equals(dataAtt.FieldName))
+                {
+                    if (exportData.isArrayData)
+                    {
+                        System.Array dataArr = null;
+                        if (exportData.isGameObjectRef)
                         {
-                            UIExportData exportData = dataList[x];
-                            if (exportData.VariableName.Equals(dataAtt.FieldName))
+                            dataArr = System.Array.CreateInstance(typeof(GameObject), exportData.CompReferenceArray.Length);
+                        }
+                        else
+                        {
+                            dataArr = System.Array.CreateInstance(exportData.CompReferenceArray[0].GetType(), exportData.CompReferenceArray.Length);
+                        }
+
+                        for (int y = 0; y < exportData.CompReferenceArray.Length; y++)
+                        {
+                            if (exportData.isGameObjectRef)
                             {
-                                field.SetValue(uiData, exportData.CompReference);
-                                break;
+                                dataArr.SetValue(exportData.CompReferenceArray[y].gameObject, y);
+                            }
+                            else
+                            {
+                                dataArr.SetValue(exportData.CompReferenceArray[y], y);
                             }
                         }
+                        field.SetValue(uiData, dataArr);
                     }
+                    else
+                    {
+                        if (exportData.isGameObjectRef)
+                        {
+                            field.SetValue(uiData, exportData.CompReference.gameObject);
+                        }
+                        else
+                        {
+                            field.SetValue(uiData, exportData.CompReference);
+                        }
+                    }
+                    dataList[x] = null;
+                    break;
                 }
             }
         }

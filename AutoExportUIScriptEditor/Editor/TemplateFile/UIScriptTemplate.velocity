@@ -10,6 +10,7 @@
  * Generate Info:
  *		Use Get And Set		: $useGetAttribute
  *		Get Data Safe Check : $dataSafeCheck
+ *		Use Field Attribute : $codeStyle
  */
 
 namespace AutoExportScriptData

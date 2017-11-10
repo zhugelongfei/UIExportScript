@@ -22,20 +22,6 @@ namespace AutoExportScriptData
                 ExportScript(false);
             }
 
-            //导出脚本
-            if (GUILayout.Button("Export Dll Script"))
-            {
-                ExportScript(true);
-            }
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal();
-            //编译Dll
-            if (GUILayout.Button("Compile dll"))
-            {
-                CompileDll();
-            }
-
             //大纲
             if (GUILayout.Button("OutLine"))
             {
@@ -47,6 +33,33 @@ namespace AutoExportScriptData
             }
 
             GUILayout.EndHorizontal();
+
+            //因物体会挂在用户定制脚本，而用户脚本并不在Dll中，故不能编译DLL
+
+            ////导出脚本
+            //if (GUILayout.Button("Export Dll Script"))
+            //{
+            //    ExportScript(true);
+            //}
+
+            //GUILayout.BeginHorizontal();
+            ////编译Dll
+            //if (GUILayout.Button("Compile dll"))
+            //{
+            //    CompileDll();
+            //}
+
+            ////大纲
+            //if (GUILayout.Button("OutLine"))
+            //{
+            //    UIExportScript expScript = target as UIExportScript;
+            //    OutLineWindow.OutLineWindowData data = new OutLineWindow.OutLineWindowData();
+            //    data.clsName = expScript.ClassName;
+            //    ShowUIProgramDataBaseWindow<OutLineWindow.OutLineWindowData>.Open<OutLineWindow>
+            //        (OutLineWindow.windowName, expScript.GetComponentsInChildren<UIProgramData>(true), data);
+            //}
+
+            //GUILayout.EndHorizontal();
 
             GUILayout.Label("by - ZhuGeLongFei");
         }

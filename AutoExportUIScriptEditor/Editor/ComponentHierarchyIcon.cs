@@ -89,13 +89,16 @@ namespace AutoExportScriptData
 
             GUI.DrawTexture(drawRect, icon);
 
-            drawRect.x -= 18;
             drawRect.y += 1;
 
             GameObject gameObj = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
             UIProgramData[] dataList = gameObj.GetComponentsInChildren<UIProgramData>();
 
-            GUI.Label(drawRect, dataList.Length.ToString(), style);
+            string countStr = dataList.Length.ToString();
+
+            drawRect.x -= countStr.Length * 10;
+
+            GUI.Label(drawRect, countStr, style);
         }
 
         private UIProgramData GetComponentFromObj(int instanceID)
